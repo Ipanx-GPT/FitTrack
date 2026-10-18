@@ -1,95 +1,37 @@
-package com.mycompany.fittrackapps;
+package com.mycompany.fittracks;
 
-public class LatihanKekuatan extends Latihan {
+public class LatihanKekuatan extends Latihan
+        implements DapatDilacak, DapatDiberiTarget {
 
-    // ==========================================
-    // ATRIBUT KHUSUS SUBCLASS
-    // ==========================================
     private String targetOtot;
     private double bebanKg;
 
-    // ==========================================
-    // CONSTRUCTOR
-    // ==========================================
-    public LatihanKekuatan(
-            String nama,
-            int durasiMenit,
-            int intensitas,
-            String targetOtot,
-            double bebanKg) {
-
-        // Memanggil constructor superclass
+    public LatihanKekuatan(String nama, int durasiMenit,
+            String intensitas, String targetOtot, double bebanKg) {
         super(nama, durasiMenit, intensitas);
-
-        this.setTargetOtot(targetOtot);
-        this.setBebanKg(bebanKg);
+        this.targetOtot = targetOtot;
+        this.bebanKg = bebanKg;
     }
 
-    // ==========================================
-    // GETTER TARGET OTOT
-    // ==========================================
-    public String getTargetOtot() {
-        return this.targetOtot;
-    }
-
-    // ==========================================
-    // SETTER TARGET OTOT
-    // ==========================================
-    public void setTargetOtot(String targetOtot) {
-
-        if (targetOtot != null && !targetOtot.trim().isEmpty()) {
-            this.targetOtot = targetOtot;
-        } else {
-            this.targetOtot = "Umum";
-        }
-    }
-
-    // ==========================================
-    // GETTER BEBAN
-    // ==========================================
-    public double getBebanKg() {
-        return this.bebanKg;
-    }
-
-    // ==========================================
-    // SETTER BEBAN
-    // ==========================================
-    public void setBebanKg(double bebanKg) {
-
-        if (bebanKg >= 0 && bebanKg <= 500) {
-            this.bebanKg = bebanKg;
-        } else {
-            this.bebanKg = 0;
-        }
-    }
-
-    // ==========================================
-    // METHOD OVERRIDING
-    // ==========================================
-    @Override
-    public void tampilkanInfo() {
-
-        super.tampilkanInfo();
-
-        System.out.printf(
-                "  %-18s | Target Otot: %-15s | Beban: %.1f kg%n",
-                "Latihan Kekuatan",
-                this.targetOtot,
-                this.bebanKg
-        );
-    }
-
-    // ==========================================
-    // METHOD OVERRIDING
-    // ==========================================
     @Override
     public void aksiKhusus() {
-
-        super.aksiKhusus();
-
         System.out.println(
-                "Aksi Kekuatan: Gunakan teknik yang benar "
-                + "dan sesuaikan beban dengan kemampuan."
+            "Aksi latihan kekuatan: lakukan gerakan dengan teknik yang benar."
         );
+        System.out.println("Target otot: " + targetOtot
+                + ", beban: " + bebanKg + " kg.");
+    }
+
+    @Override
+    public void catatAktivitas() {
+        System.out.println("Aktivitas kekuatan '" + nama
+                + "' dicatat selama " + durasiMenit + " menit.");
+    }
+
+    @Override
+    public void tampilkanTarget() {
+        System.out.println("Target latihan: melatih otot "
+                + targetOtot + " menggunakan beban "
+                + bebanKg + " kg.");
     }
 }

@@ -1,95 +1,30 @@
-package com.mycompany.fittrackapps;
+package com.mycompany.fittracks;
 
-public class LatihanKardio extends Latihan {
+public class LatihanKardio extends Latihan
+        implements DapatDilacak {
 
-    // ==========================================
-    // ATRIBUT KHUSUS SUBCLASS
-    // ==========================================
     private String jenisKardio;
     private double jarakKm;
 
-    // ==========================================
-    // CONSTRUCTOR
-    // ==========================================
-    public LatihanKardio(
-            String nama,
-            int durasiMenit,
-            int intensitas,
-            String jenisKardio,
-            double jarakKm) {
-
-        // Memanggil constructor superclass
+    public LatihanKardio(String nama, int durasiMenit,
+            String intensitas, String jenisKardio, double jarakKm) {
         super(nama, durasiMenit, intensitas);
-
-        this.setJenisKardio(jenisKardio);
-        this.setJarakKm(jarakKm);
+        this.jenisKardio = jenisKardio;
+        this.jarakKm = jarakKm;
     }
 
-    // ==========================================
-    // GETTER JENIS KARDIO
-    // ==========================================
-    public String getJenisKardio() {
-        return this.jenisKardio;
-    }
-
-    // ==========================================
-    // SETTER JENIS KARDIO
-    // ==========================================
-    public void setJenisKardio(String jenisKardio) {
-
-        if (jenisKardio != null && !jenisKardio.trim().isEmpty()) {
-            this.jenisKardio = jenisKardio;
-        } else {
-            this.jenisKardio = "Kardio";
-        }
-    }
-
-    // ==========================================
-    // GETTER JARAK
-    // ==========================================
-    public double getJarakKm() {
-        return this.jarakKm;
-    }
-
-    // ==========================================
-    // SETTER JARAK
-    // ==========================================
-    public void setJarakKm(double jarakKm) {
-
-        if (jarakKm >= 0 && jarakKm <= 200) {
-            this.jarakKm = jarakKm;
-        } else {
-            this.jarakKm = 0;
-        }
-    }
-
-    // ==========================================
-    // METHOD OVERRIDING
-    // ==========================================
-    @Override
-    public void tampilkanInfo() {
-
-        super.tampilkanInfo();
-
-        System.out.printf(
-                "  %-18s | Jenis: %-16s | Jarak: %.1f km%n",
-                "Latihan Kardio",
-                this.jenisKardio,
-                this.jarakKm
-        );
-    }
-
-    // ==========================================
-    // METHOD OVERRIDING
-    // ==========================================
     @Override
     public void aksiKhusus() {
+        System.out.println("Aksi kardio: lakukan " + jenisKardio
+                + " dengan tempo " + intensitas + ".");
+        System.out.println("Jarak yang direncanakan: "
+                + jarakKm + " km.");
+    }
 
-        super.aksiKhusus();
-
-        System.out.println(
-                "Aksi Kardio: Jaga ritme napas dan pertahankan "
-                + "intensitas secara bertahap."
-        );
+    @Override
+    public void catatAktivitas() {
+        System.out.println("Aktivitas kardio '" + nama
+                + "' dicatat: " + jarakKm + " km dalam "
+                + durasiMenit + " menit.");
     }
 }
