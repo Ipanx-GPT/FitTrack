@@ -1,85 +1,49 @@
 package com.mycompany.fittracks;
 
-public class Latihan {
-    private String nama;
-    private int durasiMenit;
-    private int intensitas;
-    private static int totalObjek = 0;
+public abstract class Latihan {
 
-    public Latihan(String nama, int durasiMenit, int intensitas) {
+    protected String nama;
+    protected int durasiMenit;
+    protected String intensitas;
 
-        this.setNama(nama);
-        this.setDurasiMenit(durasiMenit);
-        this.setIntensitas(intensitas);
+    public Latihan(String nama, int durasiMenit, String intensitas) {
+        if (nama == null || nama.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Nama latihan tidak boleh kosong.");
+        }
 
-        totalObjek++;
+        if (durasiMenit <= 0) {
+            throw new IllegalArgumentException(
+                    "Durasi harus lebih dari 0 menit.");
+        }
+
+        if (intensitas == null || intensitas.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Intensitas tidak boleh kosong.");
+        }
+
+        this.nama = nama.trim();
+        this.durasiMenit = durasiMenit;
+        this.intensitas = intensitas.trim();
     }
 
     public String getNama() {
-        return this.nama;
-    }
-
-    public void setNama(String nama) {
-
-        if (nama != null && !nama.trim().isEmpty()) {
-            this.nama = nama;
-        } else {
-            this.nama = "Tanpa Nama";
-        }
+        return nama;
     }
 
     public int getDurasiMenit() {
-        return this.durasiMenit;
+        return durasiMenit;
     }
 
-    public void setDurasiMenit(int durasiMenit) {
-
-        if (durasiMenit > 0 && durasiMenit <= 300) {
-            this.durasiMenit = durasiMenit;
-        } else {
-            System.out.println(
-                "Durasi tidak valid. Durasi diatur menjadi 30 menit."
-            );
-
-            this.durasiMenit = 30;
-        }
-    }
-
-    public int getIntensitas() {
-        return this.intensitas;
-    }
-
-    public void setIntensitas(int intensitas) {
-
-        if (intensitas >= 1 && intensitas <= 10) {
-            this.intensitas = intensitas;
-        } else {
-            System.out.println(
-                "Intensitas tidak valid. Intensitas diatur menjadi 5."
-            );
-
-            this.intensitas = 5;
-        }
-    }
-
-    public static int getTotalObjek() {
-        return totalObjek;
+    public String getIntensitas() {
+        return intensitas;
     }
 
     public void tampilkanInfo() {
-
-        System.out.printf(
-            "%-20s | %-10d | %-10d%n",
-            nama,
-            durasiMenit,
-            intensitas
-        );
+        System.out.println("Nama       : " + nama);
+        System.out.println("Durasi     : " + durasiMenit + " menit");
+        System.out.println("Intensitas : " + intensitas);
     }
 
-    public void aksiKhusus() {
-
-        System.out.println(
-            "Melakukan pemanasan sebelum latihan."
-        );
-    }
+    public abstract void aksiKhusus();
 }
