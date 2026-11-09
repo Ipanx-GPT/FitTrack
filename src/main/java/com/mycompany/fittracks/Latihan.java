@@ -1,12 +1,16 @@
+
 package com.mycompany.fittracks;
 
-public abstract class Latihan {
+public abstract class Latihan
+        implements DapatDilacak, DapatDiberiTarget {
 
     protected String nama;
     protected int durasiMenit;
     protected String intensitas;
 
-    public Latihan(String nama, int durasiMenit, String intensitas) {
+    public Latihan(String nama, int durasiMenit,
+            String intensitas) {
+
         if (nama == null || nama.trim().isEmpty()) {
             throw new IllegalArgumentException(
                     "Nama latihan tidak boleh kosong.");
@@ -43,6 +47,20 @@ public abstract class Latihan {
         System.out.println("Nama       : " + nama);
         System.out.println("Durasi     : " + durasiMenit + " menit");
         System.out.println("Intensitas : " + intensitas);
+    }
+
+    // Implementasi interface DapatDilacak
+    @Override
+    public void catatAktivitas() {
+        System.out.println(
+                "Aktivitas " + nama + " berhasil dicatat.");
+    }
+
+    // Implementasi interface DapatDiberiTarget
+    @Override
+    public void tampilkanTarget() {
+        System.out.println(
+                "Target latihan: " + durasiMenit + " menit.");
     }
 
     public abstract void aksiKhusus();

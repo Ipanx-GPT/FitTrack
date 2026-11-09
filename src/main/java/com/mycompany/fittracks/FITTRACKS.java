@@ -1,32 +1,29 @@
+
 package com.mycompany.fittracks;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.InputMismatchException;
-import java.util.Map;
 import java.util.Scanner;
 
 public class FITTRACKS {
 
-    private static final Scanner input = new Scanner(System.in);
+    private static final Scanner input =
+            new Scanner(System.in);
 
-    // ArrayList untuk menyimpan objek latihan.
-    private static final ArrayList<Latihan> daftarLatihan
-            = new ArrayList<>();
+    private static final FitTrack fitTrack =
+            new FitTrack();
 
-    // HashMap untuk menyimpan ID dan nama anggota.
-    private static final HashMap<String, String> dataAnggota
-            = new HashMap<>();
+    private static final TransaksiFitTrack transaksi =
+            new TransaksiFitTrack();
 
     public static void main(String[] args) {
 
         isiDataAwal();
-        isiAnggotaAwal();
 
         boolean berjalan = true;
 
         try {
             while (berjalan) {
+
                 tampilkanMenu();
 
                 try {
@@ -35,12 +32,13 @@ public class FITTRACKS {
                     input.nextLine();
 
                     switch (pilihan) {
+
                         case 1:
                             tambahLatihan();
                             break;
 
                         case 2:
-                            tampilkanSemuaLatihan();
+                            fitTrack.tampilkanSemuaLatihan();
                             break;
 
                         case 3:
@@ -56,7 +54,19 @@ public class FITTRACKS {
                             break;
 
                         case 6:
-                            menuAnggota();
+                            menuPengguna();
+                            break;
+
+                        case 7:
+                            fitTrack.tampilkanDashboard();
+                            break;
+
+                        case 8:
+                            simulasiTransaksi();
+                            break;
+
+                        case 9:
+                            tampilkanTargetLatihan();
                             break;
 
                         case 0:
@@ -69,74 +79,112 @@ public class FITTRACKS {
                     }
 
                 } catch (InputMismatchException e) {
+
                     System.out.println(
                             "Error: Input harus berupa angka.");
+
                     input.nextLine();
 
                 } catch (LatihanTidakDitemukanException e) {
+
                     System.out.println(
                             "Error: " + e.getMessage());
 
                 } catch (IllegalArgumentException e) {
+
                     System.out.println(
-                            "Error validasi: " + e.getMessage());
+                            "Error: " + e.getMessage());
 
                 } finally {
+
                     System.out.println(
                             "[INFO] Proses menu selesai.");
                 }
             }
 
         } finally {
+
             input.close();
+
             System.out.println(
                     "FitTrack ditutup. Terima kasih.");
         }
     }
 
+    // ==================================
+    // MENU UTAMA
+    // ==================================
+
     private static void tampilkanMenu() {
+
         System.out.println("\n========== FITTRACK ==========");
         System.out.println("1. Tambah data latihan");
         System.out.println("2. Tampilkan seluruh latihan");
         System.out.println("3. Cari latihan berdasarkan nama");
         System.out.println("4. Simulasi dynamic binding");
         System.out.println("5. Hapus latihan berdasarkan nama");
-        System.out.println("6. Kelola anggota (HashMap)");
+        System.out.println("6. Kelola pengguna");
+        System.out.println("7. Dashboard FitTrack");
+        System.out.println("8. Simulasi transaksi latihan");
+        System.out.println("9. Tampilkan target latihan");
         System.out.println("0. Keluar");
+
         System.out.println(
-                "Jumlah latihan: " + daftarLatihan.size());
+                "Jumlah latihan: "
+                + fitTrack.getJumlahLatihan());
+
         System.out.println("==============================");
     }
 
+    // ==================================
+    // DATA AWAL
+    // ==================================
+
     private static void isiDataAwal() {
-        daftarLatihan.add(
+
+        // 5 OBJEK LATIHAN
+
+        fitTrack.tambahLatihan(
                 new LatihanKekuatan(
-                        "Bench Press", 30, "Tinggi", "Dada", 40));
+                        "Bench Press", 30,
+                        "Tinggi", "Dada", 40));
 
-        daftarLatihan.add(
+        fitTrack.tambahLatihan(
                 new LatihanKardio(
-                        "Lari Pagi", 25, "Sedang", "Lari", 3.0));
+                        "Lari Pagi", 25,
+                        "Sedang", "Lari", 3.0));
 
-        daftarLatihan.add(
+        fitTrack.tambahLatihan(
                 new LatihanFleksibilitas(
-                        "Yoga", 20, "Rendah", "Yoga", 8));
+                        "Yoga", 20,
+                        "Rendah", "Yoga", 8));
 
-        daftarLatihan.add(
+        fitTrack.tambahLatihan(
                 new LatihanKekuatan(
-                        "Squat", 20, "Sedang", "Kaki", 25));
+                        "Squat", 20,
+                        "Sedang", "Kaki", 25));
 
-        daftarLatihan.add(
+        fitTrack.tambahLatihan(
                 new LatihanKardio(
-                        "Bersepeda", 45, "Sedang", "Sepeda", 10.5));
+                        "Bersepeda", 45,
+                        "Sedang", "Sepeda", 10.5));
+
+        // 3 OBJEK PENGGUNA
+
+        fitTrack.tambahPengguna(
+                new Pengguna("FT001", "Irfan Ahmad"));
+
+        fitTrack.tambahPengguna(
+                new Pengguna("FT002", "Nadia Putri"));
+
+        fitTrack.tambahPengguna(
+                new Pengguna("FT003", "Rian Saputra"));
     }
 
-    private static void isiAnggotaAwal() {
-        dataAnggota.put("FT001", "Irfan Ahmad");
-        dataAnggota.put("FT002", "Nadia Putri");
-        dataAnggota.put("FT003", "Rian Saputra");
-    }
-
+    // ==================================
     // MENU 1: TAMBAH LATIHAN
+    // ==================================
+
     private static void tambahLatihan() {
 
         System.out.println("\nJenis latihan:");
@@ -161,7 +209,9 @@ public class FITTRACKS {
         Latihan latihan;
 
         switch (jenis) {
+
             case 1:
+
                 System.out.print("Target otot: ");
                 String target = input.nextLine();
 
@@ -170,10 +220,13 @@ public class FITTRACKS {
                 input.nextLine();
 
                 latihan = new LatihanKekuatan(
-                        nama, durasi, intensitas, target, beban);
+                        nama, durasi, intensitas,
+                        target, beban);
+
                 break;
 
             case 2:
+
                 System.out.print("Jenis kardio: ");
                 String tipe = input.nextLine();
 
@@ -182,10 +235,13 @@ public class FITTRACKS {
                 input.nextLine();
 
                 latihan = new LatihanKardio(
-                        nama, durasi, intensitas, tipe, jarak);
+                        nama, durasi, intensitas,
+                        tipe, jarak);
+
                 break;
 
             case 3:
+
                 System.out.print("Jenis peregangan: ");
                 String peregangan = input.nextLine();
 
@@ -196,123 +252,96 @@ public class FITTRACKS {
                 latihan = new LatihanFleksibilitas(
                         nama, durasi, intensitas,
                         peregangan, gerakan);
+
                 break;
 
             default:
+
                 throw new IllegalArgumentException(
                         "Jenis latihan harus 1, 2, atau 3.");
         }
 
-        daftarLatihan.add(latihan);
-
-        System.out.println(
-                "Latihan berhasil ditambahkan.");
+        fitTrack.tambahLatihan(latihan);
     }
 
-    // MENU 2: TAMPILKAN LATIHAN
-    private static void tampilkanSemuaLatihan() {
-
-        if (daftarLatihan.isEmpty()) {
-            System.out.println("Belum ada data latihan.");
-            return;
-        }
-
-        System.out.println("\n===== DAFTAR LATIHAN =====");
-
-        for (int i = 0; i < daftarLatihan.size(); i++) {
-            System.out.println("\nData ke-" + (i + 1));
-            daftarLatihan.get(i).tampilkanInfo();
-        }
-    }
-
-    // PENCARIAN DENGAN CUSTOM EXCEPTION
-    private static Latihan cariLatihan(String nama)
-            throws LatihanTidakDitemukanException {
-
-        if (nama == null || nama.trim().isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Nama pencarian tidak boleh kosong.");
-        }
-
-        for (Latihan latihan : daftarLatihan) {
-            if (latihan.getNama()
-                    .equalsIgnoreCase(nama.trim())) {
-                return latihan;
-            }
-        }
-
-        throw new LatihanTidakDitemukanException(
-                "Latihan '" + nama + "' tidak ditemukan.");
-    }
-
+    // ==================================
     // MENU 3: CARI LATIHAN
+    // ==================================
+
     private static void cariLatihanMenu()
             throws LatihanTidakDitemukanException {
 
         System.out.print("Masukkan nama latihan: ");
         String nama = input.nextLine();
 
-        Latihan hasil = cariLatihan(nama);
+        Latihan hasil = fitTrack.cariLatihan(nama);
 
-        System.out.println("Data ditemukan:");
+        System.out.println("\nData ditemukan:");
         hasil.tampilkanInfo();
     }
 
+    // ==================================
     // MENU 4: DYNAMIC BINDING
+    // ==================================
+
     private static void simulasiDynamicBinding()
             throws LatihanTidakDitemukanException {
 
         System.out.print("Nama latihan: ");
         String nama = input.nextLine();
 
-        Latihan hasil = cariLatihan(nama);
+        Latihan hasil = fitTrack.cariLatihan(nama);
 
         hasil.aksiKhusus();
     }
 
+    // ==================================
     // MENU 5: HAPUS LATIHAN
+    // ==================================
+
     private static void hapusLatihan()
             throws LatihanTidakDitemukanException {
 
         System.out.print("Nama latihan yang dihapus: ");
         String nama = input.nextLine();
 
-        Latihan hasil = cariLatihan(nama);
-
-        daftarLatihan.remove(hasil);
-
-        System.out.println(
-                "Latihan berhasil dihapus.");
+        fitTrack.hapusLatihan(nama);
     }
 
-    // MENU 6: PENGELOLAAN HASHMAP
-    private static void menuAnggota() {
+    // ==================================
+    // MENU 6: KELOLA PENGGUNA
+    // ==================================
+
+    private static void menuPengguna() {
 
         boolean kembali = false;
 
         while (!kembali) {
-            System.out.println("\n===== KELOLA ANGGOTA =====");
-            System.out.println("1. Tambah anggota");
-            System.out.println("2. Cari anggota");
-            System.out.println("3. Tampilkan semua anggota");
+
+            System.out.println("\n===== KELOLA PENGGUNA =====");
+            System.out.println("1. Tambah pengguna");
+            System.out.println("2. Cari pengguna");
+            System.out.println("3. Tampilkan semua pengguna");
             System.out.println("0. Kembali");
 
             try {
-                System.out.print("Pilih menu anggota: ");
+
+                System.out.print("Pilih menu: ");
                 int pilihan = input.nextInt();
                 input.nextLine();
 
                 switch (pilihan) {
+
                     case 1:
-                        tambahAnggota();
+                        tambahPengguna();
                         break;
 
                     case 2:
-                        cariAnggota();
+                        cariPengguna();
                         break;
 
                     case 3:
-                        tampilkanAnggota();
+                        fitTrack.tampilkanSemuaPengguna();
                         break;
 
                     case 0:
@@ -325,85 +354,112 @@ public class FITTRACKS {
                 }
 
             } catch (InputMismatchException e) {
+
                 System.out.println(
-                        "Error: Pilihan harus berupa angka.");
+                        "Input harus berupa angka.");
+
                 input.nextLine();
 
             } catch (IllegalArgumentException e) {
+
                 System.out.println(
-                        "Error validasi: " + e.getMessage());
+                        "Error: " + e.getMessage());
 
             } finally {
+
                 System.out.println(
-                        "[INFO] Operasi anggota selesai.");
+                        "[INFO] Operasi pengguna selesai.");
             }
         }
     }
 
-    // TAMBAH ANGGOTA
-    private static void tambahAnggota() {
+    private static void tambahPengguna() {
 
-        System.out.print("ID anggota: ");
-        String id = input.nextLine().trim();
+        System.out.print("ID pengguna: ");
+        String id = input.nextLine();
 
-        System.out.print("Nama anggota: ");
-        String nama = input.nextLine().trim();
+        System.out.print("Nama pengguna: ");
+        String nama = input.nextLine();
 
-        if (id.isEmpty() || nama.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "ID dan nama tidak boleh kosong.");
-        }
+        // Objek dibuat di luar FitTrack
+        Pengguna pengguna = new Pengguna(id, nama);
 
-        if (dataAnggota.containsKey(id)) {
-            throw new IllegalArgumentException(
-                    "ID anggota sudah terdaftar.");
-        }
-
-        dataAnggota.put(id, nama);
-
-        System.out.println(
-                "Anggota berhasil ditambahkan.");
+        // Kemudian dimasukkan ke dalam FitTrack
+        fitTrack.tambahPengguna(pengguna);
     }
 
-    // CARI ANGGOTA
-    private static void cariAnggota() {
+    private static void cariPengguna() {
 
-        System.out.print("Masukkan ID anggota: ");
-        String id = input.nextLine().trim();
+        System.out.print("Masukkan ID pengguna: ");
+        String id = input.nextLine();
 
-        if (id.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "ID tidak boleh kosong.");
-        }
+        Pengguna pengguna = fitTrack.cariPengguna(id);
 
-        if (dataAnggota.containsKey(id)) {
-            System.out.println(
-                    "Anggota ditemukan: "
-                    + dataAnggota.get(id));
-        } else {
-            System.out.println(
-                    "Anggota dengan ID " + id
-                    + " tidak ditemukan.");
-        }
+        System.out.println("\nPengguna ditemukan:");
+        pengguna.tampilkanInfo();
     }
 
-    // TAMPILKAN SEMUA ANGGOTA
-    private static void tampilkanAnggota() {
+    // ==================================
+    // MENU 7: DASHBOARD
+    // ==================================
 
-        System.out.println(
-                "Jumlah anggota: " + dataAnggota.size());
+    // Dashboard dikelola oleh objek FitTrack.
 
-        if (dataAnggota.isEmpty()) {
-            System.out.println("Belum ada anggota.");
+    // ==================================
+    // MENU 8: ASSOCIATION
+    // ==================================
+
+    private static void simulasiTransaksi() {
+
+        System.out.println("\n===== TRANSAKSI LATIHAN =====");
+
+        System.out.print("Masukkan ID pengguna: ");
+        String id = input.nextLine();
+
+        Pengguna pengguna = fitTrack.cariPengguna(id);
+
+        fitTrack.tampilkanSemuaLatihan();
+
+        if (fitTrack.getJumlahLatihan() == 0) {
+            System.out.println("Tidak ada latihan tersedia.");
             return;
         }
 
-        for (Map.Entry<String, String> anggota
-                : dataAnggota.entrySet()) {
+        System.out.print(
+                "\nPilih nomor latihan: ");
 
-            System.out.println(
-                    "ID: " + anggota.getKey()
-                    + " | Nama: " + anggota.getValue());
+        int nomor = input.nextInt();
+        input.nextLine();
+
+        Latihan latihan = fitTrack.getLatihan(nomor - 1);
+
+        // Association:
+        // Mengirim dua objek ke method transaksi
+        transaksi.catatLatihan(pengguna, latihan);
+
+        // Menggunakan interface DapatDilacak
+        latihan.catatAktivitas();
+    }
+
+    // ==================================
+    // MENU 9: TARGET LATIHAN
+    // ==================================
+
+    private static void tampilkanTargetLatihan() {
+
+        fitTrack.tampilkanSemuaLatihan();
+
+        if (fitTrack.getJumlahLatihan() == 0) {
+            return;
         }
+
+        System.out.print("\nPilih nomor latihan: ");
+
+        int nomor = input.nextInt();
+        input.nextLine();
+
+        Latihan latihan = fitTrack.getLatihan(nomor - 1);
+
+        latihan.tampilkanTarget();
     }
 }
