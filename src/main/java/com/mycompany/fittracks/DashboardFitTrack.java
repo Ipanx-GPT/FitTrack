@@ -1,4 +1,3 @@
-
 package com.mycompany.fittracks;
 
 public class DashboardFitTrack {
@@ -12,10 +11,8 @@ public class DashboardFitTrack {
             int jumlahLatihan, int jumlahPengguna) {
 
         System.out.println("\n====== DASHBOARD FITTRACK ======");
-        System.out.println(
-                "Total jenis latihan : " + jumlahLatihan);
-        System.out.println(
-                "Total pengguna      : " + jumlahPengguna);
+        System.out.println("Total jenis latihan : " + jumlahLatihan);
+        System.out.println("Total pengguna      : " + jumlahPengguna);
         System.out.println("Status sistem       : Aktif");
         System.out.println("================================");
     }

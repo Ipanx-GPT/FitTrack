@@ -1,34 +1,31 @@
-
 package com.mycompany.fittracks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class FitTrack {
 
-    // COMPOSITION
     private DashboardFitTrack dashboard;
-
-    // AGGREGATION
     private ArrayList<Latihan> daftarLatihan;
     private HashMap<String, Pengguna> dataPengguna;
 
     public FitTrack() {
-
-        // Objek Dashboard dibuat di dalam constructor
         dashboard = new DashboardFitTrack();
-
-        // Menyiapkan tempat penyimpanan data
         daftarLatihan = new ArrayList<>();
         dataPengguna = new HashMap<>();
     }
 
-    // ==============================
-    // PENGELOLAAN LATIHAN
-    // ==============================
-
     public void tambahLatihan(Latihan latihan) {
+
         if (latihan == null) {
             throw new IllegalArgumentException(
                     "Data latihan tidak boleh kosong.");
@@ -36,8 +33,7 @@ public class FitTrack {
 
         daftarLatihan.add(latihan);
 
-        System.out.println(
-                "Latihan berhasil ditambahkan.");
+        System.out.println("Latihan berhasil ditambahkan.");
     }
 
     public void tampilkanSemuaLatihan() {
@@ -78,11 +74,9 @@ public class FitTrack {
             throws LatihanTidakDitemukanException {
 
         Latihan latihan = cariLatihan(nama);
-
         daftarLatihan.remove(latihan);
 
-        System.out.println(
-                "Latihan berhasil dihapus.");
+        System.out.println("Latihan berhasil dihapus.");
     }
 
     public Latihan getLatihan(int index) {
@@ -98,10 +92,6 @@ public class FitTrack {
     public int getJumlahLatihan() {
         return daftarLatihan.size();
     }
-
-    // ==============================
-    // PENGELOLAAN PENGGUNA
-    // ==============================
 
     public void tambahPengguna(Pengguna pengguna) {
 
@@ -119,8 +109,7 @@ public class FitTrack {
 
         dataPengguna.put(id, pengguna);
 
-        System.out.println(
-                "Pengguna berhasil ditambahkan.");
+        System.out.println("Pengguna berhasil ditambahkan.");
     }
 
     public Pengguna cariPengguna(String id) {
@@ -165,14 +154,152 @@ public class FitTrack {
         return dataPengguna.size();
     }
 
-    // ==============================
-    // COMPOSITION
-    // ==============================
-
     public void tampilkanDashboard() {
-
         dashboard.tampilkanDashboard(
                 daftarLatihan.size(),
                 dataPengguna.size());
+    }
+
+    public void simpanDataKeFile() {
+
+        ObjectOutputStream output = null;
+
+        try {
+
+            FileOutputStream file =
+                    new FileOutputStream("data_fittrack.dat");
+
+            output = new ObjectOutputStream(file);
+
+            output.writeObject(daftarLatihan);
+            output.writeObject(dataPengguna);
+
+            System.out.println(
+                    "\n[SUCCESS] Data FITTRACK berhasil disimpan.");
+
+            System.out.println(
+                    "Jumlah latihan : " + daftarLatihan.size());
+
+            System.out.println(
+                    "Jumlah pengguna: " + dataPengguna.size());
+
+            System.out.println(
+                    "File: data_fittrack.dat");
+
+        } catch (IOException e) {
+
+            System.out.println(
+                    "[ERROR] Gagal menyimpan data: "
+                    + e.getMessage());
+
+        } finally {
+
+            try {
+                if (output != null) {
+                    output.close();
+                }
+            } catch (IOException e) {
+                System.out.println(
+                        "Gagal menutup file: " + e.getMessage());
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public boolean muatDataDariFile() {
+
+        File fileData = new File("data_fittrack.dat");
+
+        if (!fileData.exists()) {
+            System.out.println(
+                    "[INFO] File data belum tersedia.");
+            return false;
+        }
+
+        ObjectInputStream input = null;
+
+        try {
+
+            FileInputStream file =
+                    new FileInputStream(fileData);
+
+            input = new ObjectInputStream(file);
+
+            daftarLatihan =
+                    (ArrayList<Latihan>) input.readObject();
+
+            dataPengguna =
+                    (HashMap<String, Pengguna>) input.readObject();
+
+            System.out.println(
+                    "\n[SUCCESS] Data berhasil dimuat kembali!");
+
+            System.out.println(
+                    "Jumlah latihan : " + daftarLatihan.size());
+
+            System.out.println(
+                    "Jumlah pengguna: " + dataPengguna.size());
+
+            return true;
+
+        } catch (IOException | ClassNotFoundException
+                | ClassCastException e) {
+
+            System.out.println(
+                    "[ERROR] Gagal memuat data: "
+                    + e.getMessage());
+
+            return false;
+
+        } finally {
+
+            try {
+                if (input != null) {
+                    input.close();
+                }
+            } catch (IOException e) {
+                System.out.println(
+                        "Gagal menutup file: " + e.getMessage());
+            }
+        }
+    }
+
+    public void bacaLogTransaksi() {
+
+        File fileLog = new File("log_aktivitas.txt");
+
+        System.out.println("\n===== RIWAYAT AKTIVITAS =====");
+
+        if (!fileLog.exists()) {
+            System.out.println(
+                    "Belum ada file riwayat aktivitas.");
+            return;
+        }
+
+        Scanner pembaca = null;
+
+        try {
+
+            pembaca = new Scanner(fileLog);
+
+            while (pembaca.hasNextLine()) {
+                String baris = pembaca.nextLine();
+                System.out.println(baris);
+            }
+
+        } catch (FileNotFoundException e) {
+
+            System.out.println(
+                    "Gagal membaca file: " + e.getMessage());
+
+        } finally {
+
+            if (pembaca != null) {
+                pembaca.close();
+            }
+        }
+
+        System.out.println(
+                "===== AKHIR RIWAYAT AKTIVITAS =====");
     }
 }

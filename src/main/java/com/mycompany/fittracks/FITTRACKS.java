@@ -1,4 +1,3 @@
-
 package com.mycompany.fittracks;
 
 import java.util.InputMismatchException;
@@ -17,7 +16,16 @@ public class FITTRACKS {
 
     public static void main(String[] args) {
 
-        isiDataAwal();
+        System.out.println("\n===== MEMUAT DATA FITTRACK =====");
+
+        boolean dataTersedia = fitTrack.muatDataDariFile();
+
+        if (!dataTersedia) {
+            System.out.println(
+                    "[INFO] Menggunakan data awal FITTRACK.");
+
+            isiDataAwal();
+        }
 
         boolean berjalan = true;
 
@@ -69,7 +77,23 @@ public class FITTRACKS {
                             tampilkanTargetLatihan();
                             break;
 
+                        case 10:
+                            fitTrack.simpanDataKeFile();
+                            break;
+
+                        case 11:
+                            fitTrack.muatDataDariFile();
+                            break;
+
+                        case 12:
+                            fitTrack.bacaLogTransaksi();
+                            break;
+
                         case 0:
+                            System.out.println(
+                                    "\nMenyimpan data sebelum keluar...");
+
+                            fitTrack.simpanDataKeFile();
                             berjalan = false;
                             break;
 
@@ -111,10 +135,6 @@ public class FITTRACKS {
         }
     }
 
-    // ==================================
-    // MENU UTAMA
-    // ==================================
-
     private static void tampilkanMenu() {
 
         System.out.println("\n========== FITTRACK ==========");
@@ -127,6 +147,9 @@ public class FITTRACKS {
         System.out.println("7. Dashboard FitTrack");
         System.out.println("8. Simulasi transaksi latihan");
         System.out.println("9. Tampilkan target latihan");
+        System.out.println("10. Simpan data ke file");
+        System.out.println("11. Muat data dari file");
+        System.out.println("12. Tampilkan log aktivitas");
         System.out.println("0. Keluar");
 
         System.out.println(
@@ -136,13 +159,7 @@ public class FITTRACKS {
         System.out.println("==============================");
     }
 
-    // ==================================
-    // DATA AWAL
-    // ==================================
-
     private static void isiDataAwal() {
-
-        // 5 OBJEK LATIHAN
 
         fitTrack.tambahLatihan(
                 new LatihanKekuatan(
@@ -169,8 +186,6 @@ public class FITTRACKS {
                         "Bersepeda", 45,
                         "Sedang", "Sepeda", 10.5));
 
-        // 3 OBJEK PENGGUNA
-
         fitTrack.tambahPengguna(
                 new Pengguna("FT001", "Irfan Ahmad"));
 
@@ -180,10 +195,6 @@ public class FITTRACKS {
         fitTrack.tambahPengguna(
                 new Pengguna("FT003", "Rian Saputra"));
     }
-
-    // ==================================
-    // MENU 1: TAMBAH LATIHAN
-    // ==================================
 
     private static void tambahLatihan() {
 
@@ -211,7 +222,6 @@ public class FITTRACKS {
         switch (jenis) {
 
             case 1:
-
                 System.out.print("Target otot: ");
                 String target = input.nextLine();
 
@@ -222,11 +232,9 @@ public class FITTRACKS {
                 latihan = new LatihanKekuatan(
                         nama, durasi, intensitas,
                         target, beban);
-
                 break;
 
             case 2:
-
                 System.out.print("Jenis kardio: ");
                 String tipe = input.nextLine();
 
@@ -237,11 +245,9 @@ public class FITTRACKS {
                 latihan = new LatihanKardio(
                         nama, durasi, intensitas,
                         tipe, jarak);
-
                 break;
 
             case 3:
-
                 System.out.print("Jenis peregangan: ");
                 String peregangan = input.nextLine();
 
@@ -252,21 +258,15 @@ public class FITTRACKS {
                 latihan = new LatihanFleksibilitas(
                         nama, durasi, intensitas,
                         peregangan, gerakan);
-
                 break;
 
             default:
-
                 throw new IllegalArgumentException(
                         "Jenis latihan harus 1, 2, atau 3.");
         }
 
         fitTrack.tambahLatihan(latihan);
     }
-
-    // ==================================
-    // MENU 3: CARI LATIHAN
-    // ==================================
 
     private static void cariLatihanMenu()
             throws LatihanTidakDitemukanException {
@@ -280,10 +280,6 @@ public class FITTRACKS {
         hasil.tampilkanInfo();
     }
 
-    // ==================================
-    // MENU 4: DYNAMIC BINDING
-    // ==================================
-
     private static void simulasiDynamicBinding()
             throws LatihanTidakDitemukanException {
 
@@ -291,13 +287,8 @@ public class FITTRACKS {
         String nama = input.nextLine();
 
         Latihan hasil = fitTrack.cariLatihan(nama);
-
         hasil.aksiKhusus();
     }
-
-    // ==================================
-    // MENU 5: HAPUS LATIHAN
-    // ==================================
 
     private static void hapusLatihan()
             throws LatihanTidakDitemukanException {
@@ -307,10 +298,6 @@ public class FITTRACKS {
 
         fitTrack.hapusLatihan(nama);
     }
-
-    // ==================================
-    // MENU 6: KELOLA PENGGUNA
-    // ==================================
 
     private static void menuPengguna() {
 
@@ -381,10 +368,7 @@ public class FITTRACKS {
         System.out.print("Nama pengguna: ");
         String nama = input.nextLine();
 
-        // Objek dibuat di luar FitTrack
         Pengguna pengguna = new Pengguna(id, nama);
-
-        // Kemudian dimasukkan ke dalam FitTrack
         fitTrack.tambahPengguna(pengguna);
     }
 
@@ -398,16 +382,6 @@ public class FITTRACKS {
         System.out.println("\nPengguna ditemukan:");
         pengguna.tampilkanInfo();
     }
-
-    // ==================================
-    // MENU 7: DASHBOARD
-    // ==================================
-
-    // Dashboard dikelola oleh objek FitTrack.
-
-    // ==================================
-    // MENU 8: ASSOCIATION
-    // ==================================
 
     private static void simulasiTransaksi() {
 
@@ -425,25 +399,16 @@ public class FITTRACKS {
             return;
         }
 
-        System.out.print(
-                "\nPilih nomor latihan: ");
+        System.out.print("\nPilih nomor latihan: ");
 
         int nomor = input.nextInt();
         input.nextLine();
 
         Latihan latihan = fitTrack.getLatihan(nomor - 1);
 
-        // Association:
-        // Mengirim dua objek ke method transaksi
         transaksi.catatLatihan(pengguna, latihan);
-
-        // Menggunakan interface DapatDilacak
         latihan.catatAktivitas();
     }
-
-    // ==================================
-    // MENU 9: TARGET LATIHAN
-    // ==================================
 
     private static void tampilkanTargetLatihan() {
 

@@ -1,12 +1,16 @@
-
 package com.mycompany.fittracks;
 
-public class Pengguna {
+import java.io.Serializable;
+
+public class Pengguna implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String id;
     private String nama;
 
     public Pengguna(String id, String nama) {
+
         if (id == null || id.trim().isEmpty()) {
             throw new IllegalArgumentException(
                     "ID pengguna tidak boleh kosong.");

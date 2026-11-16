@@ -1,8 +1,11 @@
-
 package com.mycompany.fittracks;
 
+import java.io.Serializable;
+
 public abstract class Latihan
-        implements DapatDilacak, DapatDiberiTarget {
+        implements DapatDilacak, DapatDiberiTarget, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     protected String nama;
     protected int durasiMenit;
@@ -49,14 +52,12 @@ public abstract class Latihan
         System.out.println("Intensitas : " + intensitas);
     }
 
-    // Implementasi interface DapatDilacak
     @Override
     public void catatAktivitas() {
         System.out.println(
                 "Aktivitas " + nama + " berhasil dicatat.");
     }
 
-    // Implementasi interface DapatDiberiTarget
     @Override
     public void tampilkanTarget() {
         System.out.println(
